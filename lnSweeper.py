@@ -45,12 +45,19 @@ for torrent in alltorrents:
 			thisdir = "~" + thisdir
 			# need to set up to only run if torrent is seeding (not downloading)
 			# if there is not a hardlink then procede
-			if int(numln(thisdir)) <= 1:
-				# need to add print how old the torrent is and from which tracker
-				print("")
-				print(name + " | " + label + " | " + tracker)
-				# label acts as an inbox to look through and confirm before deleting or adding to ratio group
-				server.d.custom1.set(torrent, "*lnsweep")
+			try:
+				num_lines = int(numln(thisdir))
+				if num_lines <= 1:
+					# need to add print how old the torrent is and from which tracker
+					print("")
+					print(name + " | " + label + " | " + tracker)
+					# label acts as an inbox to look through and confirm before deleting or adding to ratio group
+					server.d.custom1.set(torrent, "*lnsweep")
+				else:
+					pass
+			except ValueError:
+				print("numln did not return an integer.")
+
 	if server.d.get_custom1(torrent) == "cross-seed":
 		if server.d.get_complete(torrent) == 1:
 			name = server.d.name(torrent)
